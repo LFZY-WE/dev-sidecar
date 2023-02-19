@@ -5,29 +5,29 @@ export default {
   components: {
     DsContainer
   },
-  data () {
+  data() {
     return {
       config: undefined,
       status: {},
-      labelCol: { span: 4 },
-      wrapperCol: { span: 20 },
+      labelCol: {span: 4},
+      wrapperCol: {span: 20},
       applyLoading: false,
       systemPlatform: ''
     }
   },
-  created () {
+  created() {
     this.init()
   },
-  mounted () {
+  mounted() {
   },
   methods: {
-    getKey () {
+    getKey() {
       if (this.key) {
         return this.key
       }
       throw new Error('请设置key')
     },
-    async init () {
+    async init() {
       this.status = this.$status
 
       const config = await this.$api.config.reload()
@@ -40,20 +40,20 @@ export default {
         return this.ready(this.config)
       }
     },
-    async apply () {
+    async apply() {
       this.applyLoading = true
       await this.applyBefore()
       await this.saveConfig()
       await this.applyAfter()
       this.applyLoading = false
     },
-    async applyBefore () {
+    async applyBefore() {
 
     },
-    async applyAfter () {
+    async applyAfter() {
 
     },
-    resetDefault () {
+    resetDefault() {
       const key = this.getKey()
       this.$confirm({
         title: '提示',
@@ -67,35 +67,45 @@ export default {
           }
           await this.apply()
         },
-        onCancel () {}
+        onCancel() {}
       })
     },
-    saveConfig () {
+    saveConfig() {
+      this.enableSystemAgent();
       return this.$api.config.save(this.config).then(() => {
         this.$message.info('设置已保存')
       })
     },
-    getConfig (key) {
+    //是否启用完全代理
+    enableSystemAgent() {
+      let flag = this.config.plugin.overwall.fullAgency;
+      if (flag) {
+        this.$set(this.config.plugin.overwall.targets, '*.*', flag);
+      } else {
+        this.$set(this.config.plugin.overwall.targets, '*.*', null);
+      }
+    },
+    getConfig(key) {
       const value = lodash.get(this.config, key)
       if (value == null) {
         return {}
       }
       return value
     },
-    getStatus (key) {
+    getStatus(key) {
       const value = lodash.get(this.status, key)
       if (value == null) {
         return {}
       }
       return value
     },
-    isWindows () {
+    isWindows() {
       return this.systemPlatform === 'windows'
     },
-    isMac () {
+    isMac() {
       return this.systemPlatform === 'mac'
     },
-    isLinux () {
+    isLinux() {
       return this.systemPlatform === 'linux'
     }
   }

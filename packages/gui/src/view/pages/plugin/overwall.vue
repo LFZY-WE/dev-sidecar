@@ -3,7 +3,8 @@
     <template slot="header">
       梯子
       <span>
-           <a-button type="primary" @click="openExternal('https://github.com/docmirror/dev-sidecar-doc/blob/main/ow.md')">原理说明</a-button>
+           <a-button type="primary"
+                     @click="openExternal('https://github.com/docmirror/dev-sidecar-doc/blob/main/ow.md')">原理说明</a-button>
       </span>
     </template>
 
@@ -13,9 +14,11 @@
           <a-checkbox v-model="config.plugin.overwall.enabled">
             启用
           </a-checkbox>
-          <div>这是什么功能？你懂的！偷偷的用，别声张。(不要看视频，流量挺小的。)</div>
-          <div>建议按右上角“说明”自建服务端</div>
-          <div>仅供技术学习与探讨</div>
+        </a-form-item>
+        <a-form-item label="所有" :label-col="labelCol" :wrapper-col="wrapperCol">
+          <a-checkbox v-model="config.plugin.overwall.fullAgency">
+            启用
+          </a-checkbox>
         </a-form-item>
         <a-form-item label="PAC" :label-col="labelCol" :wrapper-col="wrapperCol">
           <a-checkbox v-model="config.plugin.overwall.pac.enabled">
@@ -30,15 +33,15 @@
                 <span>PAC没有拦截到的域名，可以在此处定义</span>
               </a-col>
               <a-col :span="2">
-                <a-button  type="primary" icon="plus" @click="addTarget()" />
+                <a-button type="primary" icon="plus" @click="addTarget()"/>
               </a-col>
             </a-row>
-            <a-row :gutter="10"  v-for="(item,index) of targets" :key = 'index'>
+            <a-row :gutter="10" v-for="(item,index) of targets" :key='index'>
               <a-col :span="22">
-                <a-input  v-model="item.key"></a-input>
+                <a-input v-model="item.key"></a-input>
               </a-col>
               <a-col :span="2">
-                <a-button  type="danger" icon="minus" @click="deleteTarget(item,index)" />
+                <a-button type="danger" icon="minus" @click="deleteTarget(item,index)"/>
               </a-col>
             </a-row>
           </div>
@@ -50,24 +53,24 @@
                 <span>Nginx二层代理服务端配置</span>
               </a-col>
               <a-col :span="2">
-                <a-button  type="primary" icon="plus" @click="addServer()" />
+                <a-button type="primary" icon="plus" @click="addServer()"/>
               </a-col>
             </a-row>
-            <a-row :gutter="10"  v-for="(item,index) of servers" :key = 'index'>
+            <a-row :gutter="10" v-for="(item,index) of servers" :key='index'>
               <a-col :span="6">
-                <a-input addon-before="域名"  placeholder="yourdomain.com"  v-model="item.key"/>
+                <a-input addon-before="域名" placeholder="yourdomain.com" v-model="item.key"/>
               </a-col>
               <a-col :span="5">
-                <a-input addon-before="端口"  placeholder="443"  v-model="item.value.port"/>
+                <a-input addon-before="端口" placeholder="443" v-model="item.value.port"/>
               </a-col>
               <a-col :span="6">
-                <a-input addon-before="路径"  placeholder="xxxxxx"  v-model="item.value.path"/>
+                <a-input addon-before="路径" placeholder="xxxxxx" v-model="item.value.path"/>
               </a-col>
               <a-col :span="5">
                 <a-input addon-before="密码" type="password" placeholder="password" v-model="item.value.password"/>
               </a-col>
               <a-col :span="2">
-                <a-button  type="danger" icon="minus" @click="deleteServer(item,index)" />
+                <a-button type="danger" icon="minus" @click="deleteServer(item,index)"/>
               </a-col>
             </a-row>
             <div class="form-help">您可以在此处配置你自己的服务器地址</div>
@@ -78,7 +81,7 @@
     </div>
     <template slot="footer">
       <div class="footer-bar">
-        <a-button class="md-mr-10" icon="sync"   @click="resetDefault()">恢复默认</a-button>
+        <a-button class="md-mr-10" icon="sync" @click="resetDefault()">恢复默认</a-button>
         <a-button :loading="applyLoading" icon="check" type="primary" @click="apply()">应用</a-button>
       </div>
     </template>
@@ -92,36 +95,36 @@ import Plugin from '../../mixins/plugin'
 export default {
   name: 'Overwall',
   mixins: [Plugin],
-  data () {
+  data() {
     return {
       key: 'plugin.overwall',
       targets: undefined,
       servers: undefined
     }
   },
-  created () {
+  created() {
     console.log('status:', this.status)
   },
-  mounted () {
+  mounted() {
   },
   methods: {
-    openExternal (url) {
+    openExternal(url) {
       this.$api.ipc.openExternal(url)
     },
-    async applyAfter () {
+    async applyAfter() {
       if (this.status.server.enabled) {
         return this.$api.server.restart()
       }
     },
-    ready () {
+    ready() {
       this.initTarget()
       this.initServer()
     },
-    async applyBefore () {
+    async applyBefore() {
       this.saveTarget()
       this.saveServer()
     },
-    initTarget () {
+    initTarget() {
       this.targets = []
       const targetsMap = this.config.plugin.overwall.targets
       for (const key in targetsMap) {
@@ -131,13 +134,13 @@ export default {
         })
       }
     },
-    deleteTarget (item, index) {
+    deleteTarget(item, index) {
       this.targets.splice(index, 1)
     },
-    addTarget () {
-      this.targets.unshift({ key: '', value: true })
+    addTarget() {
+      this.targets.unshift({key: '', value: true})
     },
-    saveTarget () {
+    saveTarget() {
       const map = {}
       for (const item of this.targets) {
         if (item.key) {
@@ -147,7 +150,7 @@ export default {
       this.config.plugin.overwall.targets = map
     },
 
-    initServer () {
+    initServer() {
       this.servers = []
       const targetsMap = this.config.plugin.overwall.server
       for (const key in targetsMap) {
@@ -160,13 +163,13 @@ export default {
         this.addServer()
       }
     },
-    deleteServer (item, index) {
+    deleteServer(item, index) {
       this.servers.splice(index, 1)
     },
-    addServer () {
-      this.servers.unshift({ key: '', value: { type: 'path' } })
+    addServer() {
+      this.servers.unshift({key: '', value: {type: 'path'}})
     },
-    saveServer () {
+    saveServer() {
       const map = {}
       for (const item of this.servers) {
         if (item.key) {
@@ -174,8 +177,7 @@ export default {
         }
       }
       this.config.plugin.overwall.server = map
-    }
-
+    },
   }
 }
 </script>

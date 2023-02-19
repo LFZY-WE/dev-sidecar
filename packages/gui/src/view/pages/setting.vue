@@ -12,11 +12,12 @@
           本应用开机自启
         </a-checkbox>
         <div class="form-help">
-          windows下建议开启开机自启。<a @click="openExternal('https://gitee.com/docmirror/dev-sidecar/blob/master/doc/recover.md')">更多说明参考</a>
+          windows下建议开启开机自启。<a
+          @click="openExternal('https://gitee.com/docmirror/dev-sidecar/blob/master/doc/recover.md')">更多说明参考</a>
         </div>
       </a-form-item>
       <a-form-item v-if="systemPlatform ==='mac'" label="隐藏Dock图标" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-checkbox v-model="config.app.dock.hideWhenWinClose" >
+        <a-checkbox v-model="config.app.dock.hideWhenWinClose">
           关闭窗口时隐藏Dock图标(仅限Mac)
         </a-checkbox>
         <div class="form-help">
@@ -35,7 +36,7 @@
       <a-form-item label="远程配置地址" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-input v-model="config.app.remoteConfig.url"></a-input>
       </a-form-item>
-      <a-form-item  label="首页提示" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-item label="首页提示" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-radio-group v-model="config.app.showShutdownTip"
                        default-value="true" button-style="solid">
           <a-radio-button :value="true">
@@ -69,7 +70,7 @@
     </div>
     <template slot="footer">
       <div class="footer-bar">
-        <a-button class="md-mr-10" icon="sync"   @click="resetDefault()">恢复默认</a-button>
+        <a-button class="md-mr-10" icon="sync" @click="resetDefault()">恢复默认</a-button>
         <a-button :loading="applyLoading" icon="check" type="primary" @click="apply()">应用</a-button>
       </div>
     </template>
@@ -79,28 +80,29 @@
 
 <script>
 import Plugin from '../mixins/plugin'
+
 export default {
   name: 'Setting',
   mixins: [Plugin],
-  data () {
+  data() {
     return {
       key: 'app'
     }
   },
-  created () {
+  created() {
 
   },
-  mounted () {
+  mounted() {
   },
   methods: {
-    openExternal (url) {
+    openExternal(url) {
       this.$api.ipc.openExternal(url)
     },
-    onAutoStartChange () {
+    onAutoStartChange() {
       this.$api.autoStart.enabled(this.config.app.autoStart.enabled)
       this.saveConfig()
     },
-    onRemoteConfigEnabledChange () {
+    onRemoteConfigEnabledChange() {
       this.saveConfig()
       this.$message.info('请重启加速服务')
     }

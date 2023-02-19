@@ -4,6 +4,7 @@ const publishUrl = process.env.VUE_APP_PUBLISH_URL
 const publishProvider = process.env.VUE_APP_PUBLISH_PROVIDER
 console.log('publish url', publishUrl)
 module.exports = {
+  lintOnSave: false,
   pages: {
     index: {
       entry: 'src/main.js',
@@ -13,7 +14,7 @@ module.exports = {
   configureWebpack: (config) => {
     const configNew = {
       plugins: [
-        new webpack.DefinePlugin({ 'global.GENTLY': true })
+        new webpack.DefinePlugin({'global.GENTLY': true})
       ],
       module: {
         rules: [
@@ -85,7 +86,7 @@ module.exports = {
           // url: 'http://dev-sidecar.docmirror.cn/update/preview/'
         }
       },
-      chainWebpackMainProcess (config) {
+      chainWebpackMainProcess(config) {
         config.entry('mitmproxy').add(path.join(__dirname, 'src/bridge/mitmproxy.js'))
       }
     }
