@@ -28,7 +28,7 @@
     overwall: {
       targets: {
         '*azureedge.net': true,
-        'github.com': true,
+        '*github.com': true,
         '*wikimedia.org': true,
         'v2ex.com': true,
         '*cloudfront.net': true,

@@ -1,8 +1,19 @@
 'use strict'
 /* global __static */
 import path from 'path'
-import { app, protocol, BrowserWindow, Menu, Tray, ipcMain, dialog, powerMonitor, nativeImage, nativeTheme } from 'electron'
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  Menu,
+  nativeImage,
+  nativeTheme,
+  powerMonitor,
+  protocol,
+  Tray
+} from 'electron'
+import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import backend from './bridge/backend'
 import DevSidecar from '@docmirror/dev-sidecar'
 import log from './utils/util.log'
@@ -22,10 +33,11 @@ DevSidecar.api.config.reload()
 let hideDockWhenWinClose = DevSidecar.api.config.get().app.dock.hideWhenWinClose || false
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } }
+  {scheme: 'app', privileges: {secure: true, standard: true}}
 ])
+
 // 隐藏主窗口，并创建托盘，绑定关闭事件
-function setTray () {
+function setTray() {
   // const topMenu = Menu.buildFromTemplate({})
   // Menu.setApplicationMenu(topMenu)
   // 用一个 Tray 来表示一个图标,这个图标处于正在运行的系统的通知区
@@ -97,12 +109,12 @@ function setTray () {
   return appTray
 }
 
-function isLinux () {
+function isLinux() {
   const platform = DevSidecar.api.shell.getSystemPlatform()
   return platform === 'linux'
 }
 
-function hideWin () {
+function hideWin() {
   if (win) {
     if (isLinux()) {
       quit(app)
@@ -115,7 +127,7 @@ function hideWin () {
   }
 }
 
-function showWin () {
+function showWin() {
   if (win) {
     win.show()
   }
@@ -124,13 +136,13 @@ function showWin () {
   }
 }
 
-function changeAppConfig (config) {
+function changeAppConfig(config) {
   if (config.hideDockWhenWinClose != null) {
     hideDockWhenWinClose = config.hideDockWhenWinClose
   }
 }
 
-function createWindow (startHideWindow) {
+function createWindow(startHideWindow) {
   // Create the browser window.
 
   win = new BrowserWindow({
@@ -210,12 +222,13 @@ function createWindow (startHideWindow) {
   })
 }
 
-async function beforeQuit () {
+async function beforeQuit() {
   return DevSidecar.api.shutdown()
 }
-async function quit () {
+
+async function quit() {
   if (tray) {
-    tray.displayBalloon({ title: '正在关闭', content: '关闭中,请稍候。。。' })
+    tray.displayBalloon({title: '正在关闭', content: '关闭中,请稍候。。。'})
   }
   await beforeQuit()
   forceClose = true
@@ -223,13 +236,14 @@ async function quit () {
 }
 
 // eslint-disable-next-line no-unused-vars
-function setDock () {
+function setDock() {
   if (isMac) {
     app.whenReady().then(() => {
       app.dock.setIcon(path.join(__dirname, '../build/mac/512x512.png'))
     })
   }
 }
+
 // -------------执行开始---------------
 app.disableHardwareAcceleration() // 禁用gpu
 
@@ -306,7 +320,7 @@ if (!isFirstInstance) {
     }
     try {
       createWindow(startHideWindow)
-      const context = { win, app, beforeQuit, quit, ipcMain, dialog, log, api: DevSidecar.api, changeAppConfig }
+      const context = {win, app, beforeQuit, quit, ipcMain, dialog, log, api: DevSidecar.api, changeAppConfig}
       backend.install(context) // 模块安装
     } catch (err) {
       log.info('err', err)

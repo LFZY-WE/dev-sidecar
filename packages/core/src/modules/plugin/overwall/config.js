@@ -21,6 +21,7 @@ module.exports = {
         "*vuejs.org": true,
         "*github.io": true,
         "*github.com": true,
+        "*githubassets.com" : true,
         "*wikimedia.org": true,
         "*azureedge.net": true,
         "*cloudfront.net": true,

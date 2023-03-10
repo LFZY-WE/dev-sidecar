@@ -7,5 +7,6 @@
     "lerna": "^3.22.1"
   },
   "dependencies": {
+    "phantomjs": "^2.1.1"
   }
 }

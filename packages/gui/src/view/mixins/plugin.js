@@ -80,9 +80,9 @@ export default {
     enableSystemAgent() {
       let flag = this.config.plugin.overwall.fullAgency;
       if (flag) {
-        this.$set(this.config.plugin.overwall.targets, '*.*', flag);
+        this.$set(this.config.plugin.overwall.targets, '*', flag);
       } else {
-        this.$set(this.config.plugin.overwall.targets, '*.*', null);
+        this.$set(this.config.plugin.overwall.targets, '*', null);
       }
     },
     getConfig(key) {
